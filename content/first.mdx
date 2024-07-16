@@ -1,0 +1,39 @@
+# 利用 github-pages 搭建个人博客
+
+## 1. 创建一个 github 仓库
+
+官方文档: https://docs.github.com/zh/pages/quickstart
+
+注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
+
+## 2. 创建一个 next.js 项目
+
+官方文档：https://nextjs.org/docs/getting-started/installation
+
+## 3. 安装一些特殊的依赖
+
+### 3.1 使用 MDX 能力
+
+什么是 MDX: https://mdxjs.com/
+
+简单来说就是可以让你在 markdown 文件中写 JSX 代码。
+
+安装依赖：
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react
+```
+
+在 `next.config.js` 中配置：
+
+```js
+// 允许 nextJs 识别 mdx 并作为组件处理
+const withMdx = require('@next/mdx')();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+};
+
+export default withMdx(nextConfig);
+```
