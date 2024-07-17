@@ -6,13 +6,11 @@
 
 注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
 
-## 2. 创建一个 next.js 项目
+## 2. 创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
 
-## 3. 安装一些特殊的依赖
-
-### 3.1 使用 MDX 能力
+### 2.1 使用 MDX 能力
 
 什么是 MDX:
 https://mdxjs.com/
@@ -39,7 +37,7 @@ const nextConfig = {
 export default withMdx(nextConfig);
 ```
 
-### 3.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
+### 2.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
 
 https://github.com/jonschlinkert/gray-matter
 
@@ -79,3 +77,5 @@ import matter from 'gray-matter';
 
 const { data, content } = matter(markdownString);
 ```
+
+## 3. 部署到 github-pages
