@@ -1,5 +1,8 @@
 // // 允许 nextJs 识别 mdx 并作为组件处理
-// import nextMdx from '@next/mdx';
+
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+});
 
 // const withMdx = nextMdx({
 //   options: {
@@ -17,6 +20,8 @@
 
 // export default nextConfig;
 
-export default {
+module.exports = withMDX({
+  pageExtensions: ['js', 'jsx', 'mdx'],
+  target: 'serverless',
   output: 'export',
-};
+});
