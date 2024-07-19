@@ -1,5 +1,5 @@
 // 允许 nextJs 识别 mdx 并作为组件处理
-import nextMDX from '@next/mdx';
+import nextMdx from '@next/mdx';
 
 const withMdx = nextMdx({
   options: {
