@@ -6,6 +6,10 @@
 
 注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
 
+创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了。此时只是一个空白页面。
+
+简单使用的话，可以放 `html` 或者 `markdown` 文件。
+
 ## 2. 创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
@@ -87,4 +91,4 @@ import matter from 'gray-matter';
 const { data, content } = matter(markdownString);
 ```
 
-## 3. 部署到 github-pages
+## 3. 利用 Actions 自动部署 github-pages
