@@ -6,6 +6,10 @@
 
 注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
 
+创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了。此时只是一个空白页面。
+
+简单使用的话，可以放 `html` 或者 `markdown` 文件。
+
 ## 2. 创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
@@ -87,4 +91,30 @@ import matter from 'gray-matter';
 const { data, content } = matter(markdownString);
 ```
 
-## 3. 部署到 github-pages
+## 3. 利用 Actions 自动部署 github-pages
+
+官方文档：https://docs.github.com/zh/actions/guides/deploying-to-github-pages
+
+### 3.1 创建 Action 流程配置文件。
+
+注意：只有 `public`的仓库 或者付费才能选择。
+
+#### 手动创建。
+
+可以选择直接手动创建一个 `yml` 文件，然后提交到 `.github/workflows` 目录下。
+
+#### 自动创建
+
+在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
+
+切换 `source` 到 `Github Actions`。
+
+此时`github`会根据你的仓库语言推荐一个打包流程，会自动创建 `.github/workflows` 目录，并创建一个 `yml` 文件。
+
+例如我们是 `next.js` 项目，那么会创建一个 `node.js.yml` 文件，点开后选择确认即可创建。
+
+此时，`Actions` 标签就可以使用了。
+
+当然，我们需要对这个文件进行一些调整，最简单的方案就是去掉 `Setup Pages` 部分，因为这部分会尝试将项目项目作为静态文件打包，而我们需要通过 `node` 方式打包。
+
+去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
