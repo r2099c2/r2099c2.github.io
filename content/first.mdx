@@ -1,3 +1,9 @@
+---
+title: 第1期：用法介绍
+slug: 2024-07-23-001
+date: 2024-07-23
+---
+
 # 利用 github-pages 搭建个人博客
 
 ## 1. 创建一个 github 仓库
@@ -118,3 +124,20 @@ const { data, content } = matter(markdownString);
 当然，我们需要对这个文件进行一些调整，最简单的方案就是去掉 `Setup Pages` 部分，因为这部分会尝试将项目项目作为静态文件打包，而我们需要通过 `node` 方式打包。
 
 去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
+
+## 4. 首页开发
+
+1. 我们要做的事情是，将 `mdx` 的内容统一放到 `content` 文件夹下。
+2. 通过 `gray-matter` 解析 `mdx` 文件，获取 `title` 和 `slug`。
+3. 将内容部分展示到首页。
+
+### 4.1 读取文件，并处理
+
+我们在统一的函数中做这个处理。
+
+创建 `lib/helper.ts`
+
+```ts
+import fs from 'fs';
+import path from 'path';
+```
