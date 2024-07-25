@@ -4,7 +4,10 @@ import matter from 'gray-matter';
 import dayjs from 'dayjs';
 import { Post, PostByMonth } from '@/types/post';
 
-export const getPost = async () => {
+/**
+ * 从 content 目录获取所有文章，并组合数据
+ */
+export const getPosts = async () => {
   const postDirectory = path.join(process.cwd(), 'content');
   const filenames = (await fs.promises.readdir(postDirectory)).reverse();
 
