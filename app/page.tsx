@@ -1,6 +1,6 @@
 import { getPosts } from '@/lib/helper';
-import NavList from './components/NavList';
-import TimeLine from './components/TimeLine';
+import NavList from '@/components/NavList';
+import TimeLine from '@/components/TimeLine';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
