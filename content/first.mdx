@@ -33,9 +33,10 @@ https://mdxjs.com/
 npm install @next/mdx @mdx-js/loader @mdx-js/react
 ```
 
-在 `next.config.js` 中配置：
+然后配置:
 
 ```js
+// next.config.js 配置：
 // 允许 nextJs 识别 mdx 并作为组件处理
 import nextMdx from '@next/mdx';
 
@@ -75,7 +76,7 @@ slug: home
 
 解析成
 
-```js
+```javascript
 {
   data: {
     title: 'Hello',
