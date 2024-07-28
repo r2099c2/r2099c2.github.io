@@ -16,7 +16,6 @@ export const getPosts = async () => {
       const filePath = path.join(postDirectory, filename);
       const fileContent = await fs.promises.readFile(filePath, 'utf8');
 
-      // 丑陋的写法，可有其他解？
       const { data, content } = matter(fileContent);
 
       const month = dayjs(data.date).format('YYYY-MM-DD').slice(0, 7);
