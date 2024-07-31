@@ -6,6 +6,14 @@ date: 2024-07-23
 
 # 利用 github-pages 搭建个人博客
 
+```js:fancyAlert.js
+function fancyAlert(arg) {
+  if (arg) {
+    $.facebox({ div: '#foo' })
+  }
+}
+```
+
 如果你只是为了搭建个博客，最简单的方案是直接用一个免费的 tailwinds template，然后直接部署到 github-pages 上。
 
 以下内容是你想手动做一个，或者想了解其中的技术细节在考虑。
@@ -39,7 +47,7 @@ npm install @next/mdx @mdx-js/loader @mdx-js/react
 
 然后配置:
 
-```js
+```javascript
 // next.config.js 配置：
 // 允许 nextJs 识别 mdx 并作为组件处理
 import nextMdx from '@next/mdx';
@@ -96,11 +104,13 @@ slug: home
 npm install gray-matter
 ```
 
-```js
+````
+```
 import matter from 'gray-matter';
 
 const { data, content } = matter(markdownString);
 ```
+````
 
 ## 3. 利用 Actions 自动部署 github-pages
 
