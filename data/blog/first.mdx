@@ -7,15 +7,11 @@ draft: true
 
 # 利用 github-pages 搭建个人博客
 
-```js:fancyAlert.js
-function fancyAlert(arg) {
-  if (arg) {
-    $.facebox({ div: '#foo' })
-  }
-}
-```
+## 利用现成的脚手架
 
 如果你只是为了搭建个博客，最简单的方案是直接用一个免费的 tailwinds template，然后直接部署到 github-pages 上。
+
+例如，我正在使用的是 https://github.com/timlrx/tailwind-nextjs-starter-blog 欢迎去给作者 star
 
 以下内容是你想手动做一个，或者想了解其中的技术细节在考虑。
 
@@ -51,7 +47,7 @@ npm install @next/mdx @mdx-js/loader @mdx-js/react
 ```javascript
 // next.config.js 配置：
 // 允许 nextJs 识别 mdx 并作为组件处理
-import nextMdx from '@next/mdx';
+import nextMdx from '@next/mdx'
 
 const withMdx = nextMdx({
   // By default only the `.mdx` extension is supported.
@@ -59,15 +55,15 @@ const withMdx = nextMdx({
   options: {
     /* otherOptions… */
   },
-});
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withMdx({
   // Support MDX files as pages:
   pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
-});
+})
 
-export default nextConfig;
+export default nextConfig
 ```
 
 ### 2.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
@@ -155,51 +151,51 @@ const { data, content } = matter(markdownString);
 可参考：https://github.com/r2099c2/r2099c2.github.io/blob/main/lib/helper.ts
 
 ```ts
-import path from 'path';
-import fs from 'fs';
-import matter from 'gray-matter';
-import dayjs from 'dayjs';
-import { Post, PostByMonth } from '@/types/post';
+import path from 'path'
+import fs from 'fs'
+import matter from 'gray-matter'
+import dayjs from 'dayjs'
+import { Post, PostByMonth } from '@/types/post'
 
 /**
  * 从 content 目录获取所有文章，并组合数据
  */
 export const getPosts = async () => {
-  const postDirectory = path.join(process.cwd(), 'content');
-  const filenames = (await fs.promises.readdir(postDirectory)).reverse();
+  const postDirectory = path.join(process.cwd(), 'content')
+  const filenames = (await fs.promises.readdir(postDirectory)).reverse()
 
   const posts: Post[] = await Promise.all(
     filenames.map(async (filename) => {
-      const filePath = path.join(postDirectory, filename);
-      const fileContent = await fs.promises.readFile(filePath, 'utf8');
+      const filePath = path.join(postDirectory, filename)
+      const fileContent = await fs.promises.readFile(filePath, 'utf8')
 
-      const { data, content } = matter(fileContent);
+      const { data, content } = matter(fileContent)
 
-      const month = dayjs(data.date).format('YYYY-MM-DD').slice(0, 7);
+      const month = dayjs(data.date).format('YYYY-MM-DD').slice(0, 7)
 
       return {
         month,
         filePath,
         data,
         content,
-      };
+      }
     })
-  );
+  )
 
   const postsByMonth = posts.reduce((acc: PostByMonth, post: Post) => {
-    const month = dayjs(post.data.date).format('YYYY-MM-DD').slice(0, 7);
+    const month = dayjs(post.data.date).format('YYYY-MM-DD').slice(0, 7)
     if (!acc[month]) {
-      acc[month] = [];
+      acc[month] = []
     }
-    acc[month].push(post);
-    return acc;
-  }, {});
+    acc[month].push(post)
+    return acc
+  }, {})
 
   return {
     posts,
     postsByMonth,
-  };
-};
+  }
+}
 ```
 
 ### 4.2 首页展示
@@ -210,21 +206,21 @@ export const getPosts = async () => {
 
 ```tsx
 export default async function Home() {
-  const { posts, postsByMonth } = await getPosts();
+  const { posts, postsByMonth } = await getPosts()
 
   return (
     <>
-      <main className="flex flex-row w-full pt-12">
-        <div className="hidden md:block md:w-1/5 pl-6"></div>
-        <div className="w-full md:w-3/5 px-6">
+      <main className="flex w-full flex-row pt-12">
+        <div className="hidden pl-6 md:block md:w-1/5"></div>
+        <div className="w-full px-6 md:w-3/5">
           <NavList posts={posts} />
         </div>
-        <div className="hidden md:flex justify-end md:w-1/5 pr-6 text-right">
+        <div className="hidden justify-end pr-6 text-right md:flex md:w-1/5">
           <TimeLine postsByMonth={postsByMonth} />
         </div>
       </main>
     </>
-  );
+  )
 }
 ```
 
@@ -241,18 +237,18 @@ export default async function Home() {
 `nextJs` 提供了一个 `MDXRemote` 组件，可以将 `mdx` 文件中的 `jsx` 代码渲染出来。
 
 ```tsx
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getPosts } from '@/lib/helper';
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import { getPosts } from '@/lib/helper'
 
 export default function PostPage({ params }: { params: { slug: string } }) {
-  const { posts } = await getPosts();
-  const post = posts.find((post) => post.data.slug === slug);
+  const { posts } = await getPosts()
+  const post = posts.find((post) => post.data.slug === slug)
 
   return (
-    <div className="w-full md:w-3/5 px-6">
+    <div className="w-full px-6 md:w-3/5">
       <MDXRemote source={post.content} />
     </div>
-  );
+  )
 }
 ```
 
@@ -262,12 +258,12 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 
 ```tsx
 export const generateStaticParams = async () => {
-  const { posts } = await getPosts();
+  const { posts } = await getPosts()
 
   return posts.map((post) => ({
     slug: post.data.slug,
-  }));
-};
+  }))
+}
 ```
 
 ### 5.3 为 MDXRemote 调整样式
