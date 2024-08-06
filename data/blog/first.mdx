@@ -13,11 +13,11 @@ draft: true
 
 例如，我正在使用的是 https://github.com/timlrx/tailwind-nextjs-starter-blog 欢迎去给作者 star
 
-你只需要对这个博客进行一些小修改即可使用，例如替换名称、为 Github Actions 配置修改下自动部署规则等。
+你只需要对这个博客模板进行一些小修改即可使用，例如替换名称、为 Github Actions 配置修改下自动部署规则等。
 
-以下内容是你想手动做一个，或者想了解其中的技术细节在考虑。
+以下内容是你想手动做一个，或者想了解其中的技术细节在继续。
 
-## 1. 创建一个 github 仓库
+## 1. 创建合适的 github 仓库来存放博客
 
 官方文档: https://docs.github.com/zh/pages/quickstart
 
@@ -27,9 +27,15 @@ draft: true
 
 简单使用的话，可以放 `html` 或者 `markdown` 文件。
 
+如果是用的模板，则可以直接将模板放到仓库中，然后修改提交。
+
 ## 2. 创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
+
+参照官方文档，创建一个 next.js 项目即可。
+
+````bash
 
 ### 2.1 使用 MDX 能力
 
@@ -42,7 +48,7 @@ https://mdxjs.com/
 
 ```bash
 npm install @next/mdx @mdx-js/loader @mdx-js/react
-```
+````
 
 然后配置:
 
