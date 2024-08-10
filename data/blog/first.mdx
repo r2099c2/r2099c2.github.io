@@ -8,9 +8,9 @@ tags: ['github', 'guide']
 
 # 利用 github-pages 搭建个人博客
 
-## 利用现成的脚手架
+## 1. 利用现成的脚手架
 
-如果你只是为了搭建个博客，最简单的方案是直接用一个免费的 tailwinds template，然后直接部署到 github-pages 上。
+如果你只是为了搭建个博客，最简单的方案是直接用一个免费的模板，然后直接部署到 github-pages 上。
 
 例如，我正在使用的是 https://github.com/timlrx/tailwind-nextjs-starter-blog 欢迎去给作者 star
 
@@ -18,7 +18,7 @@ tags: ['github', 'guide']
 
 以下内容是你想手动做一个，或者想了解其中的技术细节在继续。
 
-## 1. 创建合适的 github 仓库来存放博客
+## 1. 利用 GitHub Pages 部署项目。
 
 官方文档: https://docs.github.com/zh/pages/quickstart
 
@@ -30,11 +30,39 @@ tags: ['github', 'guide']
 
 如果是用的模板，则可以直接将模板放到仓库中，然后修改提交。
 
+## 3. 利用 Actions 自动部署 github-pages
+
+官方文档：https://docs.github.com/zh/actions/guides/deploying-to-github-pages
+
+### 3.1 创建 Action 流程配置文件。
+
+注意：只有 `public`的仓库 或者付费才能选择。
+
+#### 手动创建。
+
+可以选择直接手动创建一个 `yml` 文件，然后提交到 `.github/workflows` 目录下。
+
+#### 自动创建
+
+在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
+
+切换 `source` 到 `Github Actions`。
+
+此时`github`会根据你的仓库语言推荐一个打包流程，会自动创建 `.github/workflows` 目录，并创建一个 `yml` 文件。
+
+例如我们是 `next.js` 项目，那么会创建一个 `node.js.yml` 文件，点开后选择确认即可创建。
+
+此时，`Actions` 标签就可以使用了。
+
+当然，我们需要对这个文件进行一些调整，最简单的方案就是去掉 `Setup Pages` 部分，因为这部分会尝试将项目项目作为静态文件打包，而我们需要通过 `node` 方式打包。
+
+去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
+
 ## 2. 创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
 
-参照官方文档，创建一个 next.js 项目即可。
+参照官方文档，创建一个 next.js 项目即可，建议使用最新版本的 `App Router, Typescripts` 等相关技术。
 
 ### 2.1 使用 MDX 能力
 
@@ -116,46 +144,17 @@ const { data, content } = matter(markdownString);
 ```
 ````
 
-## 3. 利用 Actions 自动部署 github-pages
-
-官方文档：https://docs.github.com/zh/actions/guides/deploying-to-github-pages
-
-### 3.1 创建 Action 流程配置文件。
-
-注意：只有 `public`的仓库 或者付费才能选择。
-
-#### 手动创建。
-
-可以选择直接手动创建一个 `yml` 文件，然后提交到 `.github/workflows` 目录下。
-
-#### 自动创建
-
-在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
-
-切换 `source` 到 `Github Actions`。
-
-此时`github`会根据你的仓库语言推荐一个打包流程，会自动创建 `.github/workflows` 目录，并创建一个 `yml` 文件。
-
-例如我们是 `next.js` 项目，那么会创建一个 `node.js.yml` 文件，点开后选择确认即可创建。
-
-此时，`Actions` 标签就可以使用了。
-
-当然，我们需要对这个文件进行一些调整，最简单的方案就是去掉 `Setup Pages` 部分，因为这部分会尝试将项目项目作为静态文件打包，而我们需要通过 `node` 方式打包。
-
-去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
-
-## 4. 首页开发
+## 3. 首页开发
 
 1. 我们要做的事情是，将 `mdx` 的内容统一放到 `content` 文件夹下。
 2. 通过 `gray-matter` 解析 `mdx` 文件，获取 `title` 和 `slug`。
 3. 将内容部分展示到首页。
 
-### 4.1 读取文件，并处理
+### 3.1 读取文件，并处理
 
 我们在统一的函数中做这个处理。
 
-创建 `lib/helper.ts`, 可能不是最新的写法，仅作示意。
-可参考：https://github.com/r2099c2/r2099c2.github.io/blob/main/lib/helper.ts
+示例写法：
 
 ```ts
 import path from 'path'
@@ -205,7 +204,7 @@ export const getPosts = async () => {
 }
 ```
 
-### 4.2 首页展示
+### 3.2 首页展示
 
 在首页我们可以读取这里的数据，按照想要的格式进行展示，例如一个列表。
 
@@ -231,15 +230,15 @@ export default async function Home() {
 }
 ```
 
-## 5. 详情页开发
+## 4. 详情页开发
 
 详情页就是根据 `slug` 去读取对应的 `mdx` 文件，然后展示。
 
-### 5.1 创建动态路由
+### 4.1 创建动态路由
 
 根据 `nextJs` 的 `Router` 规范，以及在首页 `NavList` 中自行设定的跳转逻辑，我们需要一个 `app/post/[slug]/page.tsx` 文件，来访问`post/[slug]`路由。
 
-### 5.2 MDXRemote 来渲染 MDX 内容
+### 4.2 MDXRemote 来渲染 MDX 内容
 
 `nextJs` 提供了一个 `MDXRemote` 组件，可以将 `mdx` 文件中的 `jsx` 代码渲染出来。
 
@@ -259,7 +258,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 }
 ```
 
-### 5.3 generateStaticParams 生成静态路由参数
+### 4.3 generateStaticParams 生成静态路由参数
 
 在 `nextJs` 中，我们可以通过 `generateStaticParams` 来生成静态路由参数。https://nextjs.org/docs/app/api-reference/functions/generate-static-params
 
