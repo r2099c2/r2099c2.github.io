@@ -2,47 +2,49 @@
 title: 第1期：利用 github-pages 搭建个人博客
 slug: 2024-07-23-001
 date: '2024-07-23'
-draft: true
+draft: false
 tags: ['github', 'guide']
 ---
 
 # 1. 利用现成的脚手架
 
-如果你只是为了搭建个博客，最简单的方案是直接用一个免费的模板，然后直接部署到 github-pages、vercel 或者自己的云服务上。
+如果你只是为了搭建个博客，最简单的方案是直接用一个免费的模板，然后直接部署到 Github Pages、Vercel 或者自己的云服务上。
 
 例如，我正在使用的是 https://github.com/timlrx/tailwind-nextjs-starter-blog 欢迎使用，并记得去给作者 star 或赞助。
 
-你只需要对这个博客模板进行一些小修改即可使用，例如替换名称、为 Github Actions 配置修改下自动部署规则等。
+你只需要对这个博客模板进行一些小修改即可使用，例如替换名称、为 `Github Actions` 配置修改下自动部署规则等。
 
 # 2. 利用 GitHub Pages 部署项目。
 
-`GitHub Pages` 提供了静态页面的部署能力，很适合我们这样的博客场景，另一个是 `vercel` 会更强大一些，免费的额度用来部署一般的站点都够了，不局限是静态博客，甚至可以搭建数据库、后台服务等。
+`GitHub Pages` 提供了静态页面的部署能力，很适合我们这样的博客场景，另一个是 `Vercel` 会更强大一些，免费的额度用来部署一般的站点都够了，不局限是静态博客，甚至可以搭建数据库、后台服务等。
 
-上面介绍的这个`tailwind nextJs`模板默认就是支持 `vercel` 部署的。
+上面介绍的这个`tailwind nextJs`模板默认就是支持 `vercel` 部署的，我们这里先介绍 `github-pages` 的部署。
 
 官方文档: https://docs.github.com/zh/pages/quickstart
 
-注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
+## 2.1 创建一个仓库
+
+你可以直接用上面的模板，然后创建一个仓库，然后将模板 `clone` 到本地，修改后提交。
+
+注意: 仓库名必须是 `username.github.io`，其中 `username` 是你的 `github` 用户名。否则无法使用 `github-pages` 服务。
 
 创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了。此时只是一个空白页面。
 
-简单使用的话，可以放 `html` 或者 `markdown` 文件。
+只是简单使用的话，可以放 `html` 或者 `markdown` 文件。
 
-如果是用的模板，则可以直接将模板放到仓库中，然后修改提交。
-
-# 3. 利用 Actions 自动部署 github-pages
+## 3. 利用 Actions 自动部署 github-pages
 
 官方文档：https://docs.github.com/zh/actions/guides/deploying-to-github-pages
 
-## 3.1 创建 Action 流程配置文件。
+### 创建 Action 流程配置文件。
 
 注意：只有 `public`的仓库 或者付费才能选择。
 
-### 手动创建。
+#### 手动创建
 
 可以选择直接手动创建一个 `yml` 文件，然后提交到 `.github/workflows` 目录下。
 
-### 自动创建
+#### 自动创建
 
 在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
 
@@ -58,13 +60,17 @@ tags: ['github', 'guide']
 
 去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
 
-# 2. 创建一个 next.js 项目，并增强相关能力
+_如果只是为了创建博客，以上内容就够了，如果想手动创建或者想了解内部能力，可以继续往下看。_
+
+---
+
+# 3. 手动创建一个 next.js 项目，并增强相关能力
 
 官方文档：https://nextjs.org/docs/getting-started/installation
 
-参照官方文档，创建一个 next.js 项目即可，建议使用最新版本的 `App Router, Typescripts` 等相关技术。
+参照官方文档，创建一个 next.js 项目即可，建议使用最新版本的 `App Router, Typescripts` 等相关技术，配合 `tailwind.css` 使用。
 
-### 2.1 使用 MDX 能力
+## 3.1 使用 MDX 能力
 
 什么是 MDX:
 https://mdxjs.com/
@@ -101,7 +107,7 @@ const nextConfig = withMdx({
 export default nextConfig
 ```
 
-## 2.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
+## 3.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
 
 https://github.com/jonschlinkert/gray-matter
 
@@ -136,21 +142,19 @@ slug: home
 npm install gray-matter
 ```
 
-````
 ```
 import matter from 'gray-matter';
 
 const { data, content } = matter(markdownString);
 ```
-````
 
-# 3. 首页开发
+# 4. 首页开发
 
 1. 我们要做的事情是，将 `mdx` 的内容统一放到 `content` 文件夹下。
 2. 通过 `gray-matter` 解析 `mdx` 文件，获取 `title` 和 `slug`。
 3. 将内容部分展示到首页。
 
-## 3.1 读取文件，并处理
+## 4.1 读取文件，并处理
 
 我们在统一的函数中做这个处理。
 
@@ -204,7 +208,7 @@ export const getPosts = async () => {
 }
 ```
 
-## 3.2 首页展示
+## 4.2 首页展示
 
 在首页我们可以读取这里的数据，按照想要的格式进行展示，例如一个列表。
 
@@ -230,15 +234,15 @@ export default async function Home() {
 }
 ```
 
-# 4. 详情页开发
+# 5. 详情页开发
 
 详情页就是根据 `slug` 去读取对应的 `mdx` 文件，然后展示。
 
-## 4.1 创建动态路由
+## 5.1 创建动态路由
 
 根据 `nextJs` 的 `Router` 规范，以及在首页 `NavList` 中自行设定的跳转逻辑，我们需要一个 `app/post/[slug]/page.tsx` 文件，来访问`post/[slug]`路由。
 
-## 4.2 MDXRemote 来渲染 MDX 内容
+## 5.2 MDXRemote 来渲染 MDX 内容
 
 `nextJs` 提供了一个 `MDXRemote` 组件，可以将 `mdx` 文件中的 `jsx` 代码渲染出来。
 
@@ -258,7 +262,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
 }
 ```
 
-## 4.3 generateStaticParams 生成静态路由参数
+## 5.3 generateStaticParams 生成静态路由参数
 
 在 `nextJs` 中，我们可以通过 `generateStaticParams` 来生成静态路由参数。https://nextjs.org/docs/app/api-reference/functions/generate-static-params
 
@@ -272,7 +276,7 @@ export const generateStaticParams = async () => {
 }
 ```
 
-## 5.3 为 MDXRemote 调整样式
+## 5.4 为 MDXRemote 调整样式
 
 我们用了 `tailwinds.css` 会覆盖原有的样式，同时 `MDXRemote` 支持我们通过 `components` 属性来自定义样式。
 
@@ -280,8 +284,12 @@ export const generateStaticParams = async () => {
 <MDXRemote source={post.content} components={MDXComponents} />
 ```
 
-## 或者使用 `contentlayer` 来配置所有的博客内容
+或者使用 `contentlayer` 来配置所有的博客内容
 
 参考： https://contentlayer.dev/docs/getting-started-cddd76b7
 
 通过 `content layer` 的 `conentlayer.config.ts` 对于各种数据的配置，可以很方便的配置管理各种数据格式。
+
+# 6 下一步
+
+至此，基本的能力都已经实现了，你可以在 `contens` 目录下创建 `mdx` 文件，然后在首页和详情页展示。
