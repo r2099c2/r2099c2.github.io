@@ -18,11 +18,14 @@ export const getPosts = async () => {
 
       const { data, content } = matter(fileContent);
 
-      const month = dayjs(data.date).format('YYYY-MM-DD').slice(0, 7);
+      const postDate = dayjs(data.postDate).format('YYYY-MM-DD');
+      const month = postDate.slice(0, 7);
+
       const title = data.title;
 
       return {
         title,
+        postDate,
         month,
         filePath,
         data,
