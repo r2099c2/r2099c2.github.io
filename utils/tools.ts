@@ -26,6 +26,7 @@ export const getPosts = async () => {
       return {
         title,
         postDate,
+        slug: data.slug,
         month,
         filePath,
         data,

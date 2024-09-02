@@ -10,6 +10,8 @@ export interface Post {
   lastUpdated?: string;
   /** 发帖时间 */
   postDate: string;
+  /** slug */
+  slug: string;
   filePath: string;
   data: {
     [key: string]: string;
