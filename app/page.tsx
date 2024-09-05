@@ -5,7 +5,7 @@ export default async function Home() {
   console.log('🚀 ~ Home ~ posts:', posts);
 
   return (
-    <main>
+    <main className="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
       {/* 列表 */}
       <ul>
         {posts.map((post) => (
