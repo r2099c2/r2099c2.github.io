@@ -20,8 +20,8 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <div className="flex flex-row w-full pt-12">
-      <div className="w-full md:w-3/5 px-6">
+    <div className="pt-12">
+      <div className="mx-auto w-full md:w-4/5 lg:w-3/5 px-6">
         <article id="article">
           <h1>{post.data.title}</h1>
           {/* TODO: MDXRemote */}
