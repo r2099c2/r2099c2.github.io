@@ -1,6 +1,6 @@
 // import MDXComponents from '@/components/MDXComponent';
 import { getPosts } from '@/utils/tools';
-// import { MDXRemote } from 'next-mdx-remote/rsc';
+import { MDXRemote } from 'next-mdx-remote/rsc';
 
 const PostDetail = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
@@ -24,9 +24,7 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
       <div className="mx-auto w-full md:w-4/5 lg:w-3/5 px-6">
         <article id="article">
           <h1>{post.data.title}</h1>
-          {/* TODO: MDXRemote */}
-          {post.content}
-          {/* <MDXRemote source={post.content} components={MDXComponents} /> */}
+          <MDXRemote source={post.content} />
         </article>
       </div>
     </div>
