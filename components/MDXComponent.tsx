@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import React, { ReactNode } from 'react';
+import SyntaxHightLighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 interface HeadingProps {
   level: 1 | 2 | 3 | 4 | 5 | 6;
@@ -67,10 +69,11 @@ const MDXComponents: MDXComponentsProps = {
   ol: (props) => <ol className="list-decimal pl-5 mt-0 mb-4" {...props} />,
   li: (props) => <li className="mb-2" {...props} />,
   code: (props) => (
-    <code
-      className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
-      {...props}
-    />
+    // <code
+    //   className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
+    //   {...props}
+    // />
+    <SyntaxHightLighter language="javascript" style={docco} {...props} />
   ),
   pre: (props) => (
     <pre className="bg-gray-600 rounded p-4 overflow-x-auto my-2" {...props} />
