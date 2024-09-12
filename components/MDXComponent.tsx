@@ -68,13 +68,24 @@ const MDXComponents: MDXComponentsProps = {
   ul: (props) => <ul className="list-disc pl-5 mt-0 mb-4" {...props} />,
   ol: (props) => <ol className="list-decimal pl-5 mt-0 mb-4" {...props} />,
   li: (props) => <li className="mb-2" {...props} />,
-  code: (props) => (
-    // <code
-    //   className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
-    //   {...props}
-    // />
-    <SyntaxHightLighter language="javascript" style={docco} {...props} />
-  ),
+  code: (props) => {
+    if (props.className) {
+      return (
+        <SyntaxHightLighter
+          language={props.className}
+          style={docco}
+          {...props}
+        />
+      );
+    } else {
+      return (
+        <span
+          className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
+          {...props}
+        />
+      );
+    }
+  },
   pre: (props) => (
     <pre className="bg-gray-600 rounded p-4 overflow-x-auto my-2" {...props} />
   ),
