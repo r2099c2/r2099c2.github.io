@@ -72,7 +72,7 @@ const MDXComponents: MDXComponentsProps = {
     if (props.className) {
       return (
         <SyntaxHightLighter
-          language={props.className}
+          language={props.className.replace('language-', '')}
           style={docco}
           {...props}
         />
@@ -87,7 +87,8 @@ const MDXComponents: MDXComponentsProps = {
     }
   },
   pre: (props) => (
-    <pre className="bg-gray-600 rounded p-4 overflow-x-auto my-2" {...props} />
+    // <pre className="bg-gray-600 rounded p-4 overflow-x-auto my-2" {...props} />
+    <pre {...props} />
   ),
   blockquote: (props) => (
     <blockquote
