@@ -22,6 +22,13 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
   return (
     <div className="pt-12 bg-sky-900">
       {/* 左侧文章切换 */}
+      <div>
+        {posts.map((post) => (
+          <a key={post.slug} className="text-sm" href={`/post/${post.slug}`}>
+            {post.title} - {post.month}
+          </a>
+        ))}
+      </div>
       {/* 中间当前文章 */}
       <div className="mx-auto w-full md:w-4/5 lg:w-3/5 px-6">
         <article id="article">
