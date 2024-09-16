@@ -26,24 +26,20 @@ interface MDXComponentsProps {
 
 const MDXComponents: MDXComponentsProps = {
   h1: (props) => (
-    <Heading level={1} className="text-4xl font-bold mt-6 mb-4" {...props} />
+    <Heading level={1} className="text-3xl font-bold mt-6 mb-4" {...props} />
   ),
   h2: (props) => (
     <Heading
       level={2}
-      className="text-3xl font-semibold mt-6 mb-4 border-b-2 border-gray-200 pb-2"
+      className="text-2xl font-semibold mt-6 mb-4 border-b-2 border-gray-200 pb-2"
       {...props}
     />
   ),
   h3: (props) => (
-    <Heading
-      level={3}
-      className="text-2xl font-semibold mt-6 mb-4"
-      {...props}
-    />
+    <Heading level={3} className="text-xl font-semibold mt-6 mb-4" {...props} />
   ),
   h4: (props) => (
-    <Heading level={4} className="text-xl font-semibold mt-6 mb-4" {...props} />
+    <Heading level={4} className="text-lg font-semibold mt-6 mb-4" {...props} />
   ),
   h5: (props) => (
     <Heading level={5} className="text-lg font-semibold mt-6 mb-4" {...props} />
@@ -56,7 +52,7 @@ const MDXComponents: MDXComponentsProps = {
     />
   ),
   hr: (props) => <hr className="border-t border-gray-600" {...props} />,
-  p: (props) => <p className="mt-4 mb-4" {...props} />,
+  p: (props) => <p className="text-base mt-4 mb-4" {...props} />,
   a: (props) => (
     <a
       className="link-underline"

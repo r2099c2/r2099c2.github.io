@@ -22,7 +22,7 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
   return (
     <div className="pt-12 bg-sky-900">
       {/* 左侧文章切换 */}
-      <div>
+      <div className="hidden md:block">
         {posts.map((post) => (
           <a key={post.slug} className="text-sm" href={`/post/${post.slug}`}>
             {post.title} - {post.month}
