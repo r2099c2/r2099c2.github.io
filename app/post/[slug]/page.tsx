@@ -20,9 +20,9 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <div className="pt-12 bg-sky-900">
+    <div className="pt-12 bg-sky-900 flex">
       {/* 左侧文章切换 */}
-      <div className="hidden lg:block">
+      <div className="hidden lg:flex w-1/5 pl-4">
         {posts.map((post) => (
           <a key={post.slug} className="text-sm" href={`/post/${post.slug}`}>
             {post.title} - {post.month}
@@ -30,7 +30,7 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
         ))}
       </div>
       {/* 中间当前文章 */}
-      <div className="mx-auto w-full md:w-4/5 lg:w-3/5 px-6 overflow-hidden">
+      <div className="mx-auto w-full md:w-4/5 lg:w-2/3 px-6 overflow-hidden">
         <article id="article">
           <h1>{post.data.title}</h1>
           <MDXRemote source={post.content} components={MDXComponents} />
