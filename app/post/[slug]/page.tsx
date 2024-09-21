@@ -1,5 +1,6 @@
 import MDXComponents from '@/components/MDXComponent';
 import { getPosts } from '@/utils/tools';
+import clsx from 'clsx';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 const PostDetail = async ({ params }: { params: { slug: string } }) => {
@@ -26,7 +27,9 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
         {posts.map((post) => (
           <a
             key={post.slug}
-            className="text-sm block pb-1"
+            className={clsx('text-sm block pb-1', {
+              'text-blue-400': post.slug === slug,
+            })}
             href={`/post/${post.slug}`}
           >
             {post.title} - {post.month}
