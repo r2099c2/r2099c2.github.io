@@ -39,8 +39,11 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
         ))}
       </ul>
       {/* 中间当前文章 */}
-      <div className="lg:pl-[14rem] overflow-hidden">
-        <article id="article" className="px-4">
+      <div className="lg:pl-[14rem]">
+        <article
+          id="article"
+          className="px-4 max-w-4xl mx-auto overflow-hidden"
+        >
           <MDXRemote source={post.content} components={MDXComponents} />
         </article>
       </div>
