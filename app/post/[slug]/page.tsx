@@ -39,7 +39,7 @@ const PostDetail = async ({ params }: { params: { slug: string } }) => {
         ))}
       </ul>
       {/* 中间当前文章 */}
-      <div className="lg:pl-[12rem] xl:pl-[18rem] 2xl:pl-0">
+      <div className="lg:pl-[12rem] xl:pl-[18rem] 2xl:pl-0 text-white">
         <article
           id="article"
           className="px-4 max-w-4xl mx-auto overflow-hidden"
