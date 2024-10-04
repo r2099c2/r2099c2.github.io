@@ -109,7 +109,7 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-#### 自动创建
+#### 或者：自动创建
 
 在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
 
@@ -125,16 +125,15 @@ jobs:
 
 去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
 
-## 3. 创建一个 next.js 项目，并增强相关能力
+## 3. 创建一个 next.js 项目，增强相关写 markdown 的能力
 
-官方文档：https://nextjs.org/docs/getting-started/installation
+nextJs 官方文档：[https://nextjs.org/docs/getting-started/installation](https://nextjs.org/docs/getting-started/installation)
 
 ### 3.1 使用 MDX 能力
 
-什么是 MDX:
-https://mdxjs.com/
+什么是 MDX:[https://mdxjs.com/](https://mdxjs.com/)
 
-简单来说就是可以让你在 markdown 文件中写 JSX 代码。
+简单来说就是可以让你在 markdown 文件中写 JSX 代码，然后就可以将文件中各个部分进行拆分，通过不同的类型来进行不同的样式渲染。
 
 安装依赖：
 
@@ -257,3 +256,139 @@ export const generateStaticParams = async () => {
 ```tsx
 <MDXRemote source={post.content} components={MDXComponents} />
 ```
+
+可以参考如下代码，mdxjs 会将文件拆分成对应的标签，我们可以根据标签不同设置不同的样式。
+
+```jsx
+import Image from 'next/image';
+import React, { ReactNode } from 'react';
+import SyntaxHightLighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+interface HeadingProps {
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+  className: string;
+  children: ReactNode;
+}
+
+const Heading: React.FC<HeadingProps> = ({ level, className, children }) => {
+  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+  const headingId = children?.toString() ?? '';
+
+  return (
+    <HeadingTag id={headingId} className={className}>
+      {children}
+    </HeadingTag>
+  );
+};
+
+interface MDXComponentsProps {
+  [key: string]: React.FC<any>;
+}
+
+const MDXComponents: MDXComponentsProps = {
+  h1: (props) => (
+    <Heading level={1} className="text-3xl font-bold mt-6 mb-4" {...props} />
+  ),
+  h2: (props) => (
+    <Heading
+      level={2}
+      className="text-2xl font-semibold mt-6 mb-4 border-b-2 border-gray-200 pb-2"
+      {...props}
+    />
+  ),
+  h3: (props) => (
+    <Heading level={3} className="text-xl font-semibold mt-6 mb-4" {...props} />
+  ),
+  h4: (props) => (
+    <Heading level={4} className="text-lg font-semibold mt-6 mb-4" {...props} />
+  ),
+  h5: (props) => (
+    <Heading level={5} className="text-lg font-semibold mt-6 mb-4" {...props} />
+  ),
+  h6: (props) => (
+    <Heading
+      level={6}
+      className="text-base font-semibold mt-6 mb-4"
+      {...props}
+    />
+  ),
+  hr: (props) => <hr className="border-t border-gray-600" {...props} />,
+  p: (props) => <p className="text-base mt-4 mb-4" {...props} />,
+  a: (props) => (
+    <a
+      className="underline"
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      {...props}
+    />
+  ),
+  ul: (props) => <ul className="list-disc pl-5 mt-0 mb-4" {...props} />,
+  ol: (props) => <ol className="list-decimal pl-5 mt-0 mb-4" {...props} />,
+  li: (props) => <li className="mb-2" {...props} />,
+  code: (props) => {
+    if (props.className) {
+      // 根据代码块的 className 来渲染不同的样式
+      return (
+        <SyntaxHightLighter
+          language={props.className.replace('language-', '')}
+          style={docco}
+          {...props}
+        />
+      );
+    } else {
+      return (
+        <span
+          className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
+          {...props}
+        />
+      );
+    }
+  },
+  pre: (props) => <pre {...props} />,
+  blockquote: (props) => (
+    <blockquote
+      className="pl-4 border-l-4 border-gray-200 my-4 text-gray-300 italic"
+      {...props}
+    />
+  ),
+  img: (props) => (
+    <Image
+      width="70%"
+      className="rounded border-4 border-main"
+      alt="base"
+      {...props}
+    />
+  ),
+  strong: (props) => <strong className="font-bold" {...props} />,
+  em: (props) => <em className="italic font-light" {...props} />,
+  table: (props) => (
+    <div className="my-6 w-full overflow-x-auto">
+      <table
+        className="w-full text-gray-200 bg-gray-800 shadow-lg rounded-lg"
+        {...props}
+      />
+    </div>
+  ),
+  tr: (props) => <tr className="border-t border-gray-500" {...props} />,
+  th: (props) => (
+    <th
+      className="px-4 py-2 font-bold text-left bg-gray-900 text-white [&[align=center]]:text-center [&[align=right]]:text-right"
+      {...props}
+    />
+  ),
+  td: (props) => (
+    <td
+      className="px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right"
+      {...props}
+    />
+  ),
+};
+
+export default MDXComponents;
+
+```
+
+# 总结
+
+以上就是一个简单的基于 `NextJs,MDX,GitHub Pages` 的基本使用方式和基础的技术点，其他的能力根据自己的需要补充即可。

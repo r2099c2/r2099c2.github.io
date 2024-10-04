@@ -66,6 +66,7 @@ const MDXComponents: MDXComponentsProps = {
   li: (props) => <li className="mb-2" {...props} />,
   code: (props) => {
     if (props.className) {
+      // 根据代码块的 className 来渲染不同的样式
       return (
         <SyntaxHightLighter
           language={props.className.replace('language-', '')}
@@ -82,10 +83,7 @@ const MDXComponents: MDXComponentsProps = {
       );
     }
   },
-  pre: (props) => (
-    // <pre className="bg-gray-600 rounded p-4 overflow-x-auto my-2" {...props} />
-    <pre {...props} />
-  ),
+  pre: (props) => <pre {...props} />,
   blockquote: (props) => (
     <blockquote
       className="pl-4 border-l-4 border-gray-200 my-4 text-gray-300 italic"
