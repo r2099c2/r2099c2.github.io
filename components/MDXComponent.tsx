@@ -55,7 +55,7 @@ const MDXComponents: MDXComponentsProps = {
   p: (props) => <p className="text-base mt-4 mb-4" {...props} />,
   a: (props) => (
     <a
-      className="link-underline"
+      className="underline"
       target="_blank"
       rel="noopener noreferrer nofollow"
       {...props}
