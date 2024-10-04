@@ -19,21 +19,95 @@ _ps: 如果你只是为了用 github 的 pages 搭建个博客，简单的方案
 
 2. 并且，只有 `public`的仓库 或者付费才能使用 pages 服务。
 
-创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了。此时只是一个空白页面。
+创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了，此时只是一个空白页面。
 
 简单使用的话，可以放 `html` 或者 `markdown` 文件。
 
 ## 2. 利用 Actions 自动部署 github-pages
 
-官方文档：https://docs.github.com/zh/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+官方文档：[https://docs.github.com/zh/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site](https://docs.github.com/zh/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 
 _如果链接过期，可以直接搜索 `github pages actions`。_
 
 ### 2.1 创建 Action 流程配置文件。
 
-#### 手动创建。
+#### 手动创建
 
-可以选择直接手动创建一个 `yml` 文件，然后提交到 `.github/workflows` 目录下。
+可以选择直接手动创建一个 `yml` 文件，放到自己项目的 `.github/workflows` 目录下。
+
+示例：
+
+```yml
+# Sample workflow for building and deploying a Next.js site to GitHub Pages
+#
+# To get started with Next.js see: https://nextjs.org/docs/getting-started
+#
+name: Deploy Next.js site to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ['main']
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build with Next.js
+        run: pnpm build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
 
 #### 自动创建
 
