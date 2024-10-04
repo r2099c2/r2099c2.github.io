@@ -1,0 +1,394 @@
+---
+title: 利用 github-pages 搭建个人博客
+slug: '2024-09-24'
+postDate: 2024-09-24
+lastUpdated: 2024-09-24
+---
+
+# 利用 github-pages 搭建个人博客
+
+_ps: 如果你只是为了用 github 的 pages 搭建个博客，简单的方案可以直接用一个免费的 tailwinds template 然后直接部署到 github-pages 上。更省事的做法是用现有的博客平台，或者 notion 等笔记工具即可。_
+
+## 1. 首先创建一个 github 仓库用来存放项目
+
+官方文档: [https://docs.github.com/zh/pages/quickstart](https://docs.github.com/zh/pages/quickstart)
+
+注意:
+
+1. 仓库名必须是 `username.github.io`，其中 `username` 是你的 github 用户名。否则无法使用 github-pages 服务。
+
+2. 并且，只有 `public`的仓库 或者付费才能使用 pages 服务。
+
+创建完成后其实在对应的 `https://<yourUserName>.github.io` 就可以访问了，此时只是一个空白页面。
+
+简单使用的话，可以放 `html` 或者 `markdown` 文件。
+
+## 2. 利用 Actions 自动部署 github-pages
+
+官方文档：[https://docs.github.com/zh/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site](https://docs.github.com/zh/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+
+_如果链接过期，可以直接搜索 `github pages actions`。_
+
+### 2.1 创建 Action 流程配置文件。
+
+#### 手动创建
+
+可以选择直接手动创建一个 `yml` 文件，放到自己项目的 `.github/workflows` 目录下。
+
+示例：
+
+```yml
+# Sample workflow for building and deploying a Next.js site to GitHub Pages
+#
+# To get started with Next.js see: https://nextjs.org/docs/getting-started
+#
+name: Deploy Next.js site to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ['main']
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build with Next.js
+        run: pnpm build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+#### 或者：自动创建
+
+在 `git repo` 中选择 `Settings` -> `Pages` -> `Build and deployment`
+
+切换 `source` 到 `Github Actions`。
+
+此时`github`会根据你的仓库语言推荐一个打包流程，会自动创建 `.github/workflows` 目录，并创建一个 `yml` 文件。
+
+例如如果是 `next.js` 项目，那么会创建一个 `node.js.yml` 文件，点开后选择确认即可创建。
+
+此时，`Actions` 标签就可以使用了。
+
+当然，我们需要对这个文件进行一些调整，最简单的方案就是去掉 `Setup Pages` 部分，因为这部分会尝试将项目项目作为静态文件打包，而我们需要通过 `node` 方式打包。
+
+去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
+
+## 3. 创建一个 next.js 项目，增强相关写 markdown 的能力
+
+nextJs 官方文档：[https://nextjs.org/docs/getting-started/installation](https://nextjs.org/docs/getting-started/installation)
+
+### 3.1 使用 MDX 能力
+
+什么是 MDX:[https://mdxjs.com/](https://mdxjs.com/)
+
+简单来说就是可以让你在 markdown 文件中写 JSX 代码，然后就可以将文件中各个部分进行拆分，通过不同的类型来进行不同的样式渲染。
+
+安装依赖：
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react
+```
+
+然后配置:
+
+```javascript
+// next.config.js 配置：
+// 允许 nextJs 识别 mdx 并作为组件处理
+import nextMdx from '@next/mdx';
+
+const withMdx = nextMdx({
+  extension: /\.mdx?$/,
+  options: {
+    /* otherOptions… */
+  },
+});
+
+/** @type {import('next').NextConfig} */
+const nextConfig = withMdx({
+  // Support MDX files as pages:
+  pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
+});
+
+export default nextConfig;
+```
+
+### 3.2 利用 gray-matter 解析 markdown 文件的配置，增强能力
+
+https://github.com/jonschlinkert/gray-matter
+
+gray-matter 能做什么?
+
+将：
+
+```mdx
+---
+title: Hello
+slug: home
+---
+
+<h1>Hello world!</h1>
+```
+
+解析成
+
+```javascript
+{
+  data: {
+    title: 'Hello',
+    slug: 'home'
+  },
+  content: '<h1>Hello world!</h1>'
+}
+```
+
+使用方式，安装依赖：
+
+```bash
+npm install gray-matter
+```
+
+使用
+
+```javascript
+import matter from 'gray-matter';
+
+const { data, content } = matter(markdownString);
+```
+
+## 4. 详情页开发
+
+详情页就是根据 `slug` 去读取对应的 `mdx` 文件，然后展示。
+
+### 4.1 创建动态路由
+
+根据 `nextJs` 的 `Router` 规范，以及在首页 `NavList` 中自行设定的跳转逻辑，我们需要一个 `app/post/[slug]/page.tsx` 文件，来访问`post/[slug]`路由。
+
+### 4.2 MDXRemote 来渲染 MDX 内容
+
+`nextJs` 提供了一个 `MDXRemote` 组件，可以将 `mdx` 文件中的 `jsx` 代码渲染出来。
+
+```tsx
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getPosts } from '@/lib/helper';
+
+export default function PostPage({ params }: { params: { slug: string } }) {
+  const { posts } = await getPosts();
+  const post = posts.find((post) => post.data.slug === slug);
+
+  return (
+    <div className="w-full md:w-3/5 px-6">
+      <MDXRemote source={post.content} />
+    </div>
+  );
+}
+```
+
+### 4.3 generateStaticParams 生成静态路由参数
+
+在 `nextJs` 中，我们可以通过 `generateStaticParams` 来生成静态路由参数。https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+
+```tsx
+export const generateStaticParams = async () => {
+  const { posts } = await getPosts();
+
+  return posts.map((post) => ({
+    slug: post.data.slug,
+  }));
+};
+```
+
+### 4.4 为 MDXRemote 调整样式
+
+我们用了 `tailwinds.css` 会覆盖原有的样式，同时 `MDXRemote` 支持我们通过 `components` 属性来自定义样式。
+
+```tsx
+<MDXRemote source={post.content} components={MDXComponents} />
+```
+
+可以参考如下代码，mdxjs 会将文件拆分成对应的标签，我们可以根据标签不同设置不同的样式。
+
+```jsx
+import Image from 'next/image';
+import React, { ReactNode } from 'react';
+import SyntaxHightLighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+interface HeadingProps {
+  level: 1 | 2 | 3 | 4 | 5 | 6;
+  className: string;
+  children: ReactNode;
+}
+
+const Heading: React.FC<HeadingProps> = ({ level, className, children }) => {
+  const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+  const headingId = children?.toString() ?? '';
+
+  return (
+    <HeadingTag id={headingId} className={className}>
+      {children}
+    </HeadingTag>
+  );
+};
+
+interface MDXComponentsProps {
+  [key: string]: React.FC<any>;
+}
+
+const MDXComponents: MDXComponentsProps = {
+  h1: (props) => (
+    <Heading level={1} className="text-3xl font-bold mt-6 mb-4" {...props} />
+  ),
+  h2: (props) => (
+    <Heading
+      level={2}
+      className="text-2xl font-semibold mt-6 mb-4 border-b-2 border-gray-200 pb-2"
+      {...props}
+    />
+  ),
+  h3: (props) => (
+    <Heading level={3} className="text-xl font-semibold mt-6 mb-4" {...props} />
+  ),
+  h4: (props) => (
+    <Heading level={4} className="text-lg font-semibold mt-6 mb-4" {...props} />
+  ),
+  h5: (props) => (
+    <Heading level={5} className="text-lg font-semibold mt-6 mb-4" {...props} />
+  ),
+  h6: (props) => (
+    <Heading
+      level={6}
+      className="text-base font-semibold mt-6 mb-4"
+      {...props}
+    />
+  ),
+  hr: (props) => <hr className="border-t border-gray-600" {...props} />,
+  p: (props) => <p className="text-base mt-4 mb-4" {...props} />,
+  a: (props) => (
+    <a
+      className="underline"
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      {...props}
+    />
+  ),
+  ul: (props) => <ul className="list-disc pl-5 mt-0 mb-4" {...props} />,
+  ol: (props) => <ol className="list-decimal pl-5 mt-0 mb-4" {...props} />,
+  li: (props) => <li className="mb-2" {...props} />,
+  code: (props) => {
+    if (props.className) {
+      // 根据代码块的 className 来渲染不同的样式
+      return (
+        <SyntaxHightLighter
+          language={props.className.replace('language-', '')}
+          style={docco}
+          {...props}
+        />
+      );
+    } else {
+      return (
+        <span
+          className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
+          {...props}
+        />
+      );
+    }
+  },
+  pre: (props) => <pre {...props} />,
+  blockquote: (props) => (
+    <blockquote
+      className="pl-4 border-l-4 border-gray-200 my-4 text-gray-300 italic"
+      {...props}
+    />
+  ),
+  img: (props) => (
+    <Image
+      width="70%"
+      className="rounded border-4 border-main"
+      alt="base"
+      {...props}
+    />
+  ),
+  strong: (props) => <strong className="font-bold" {...props} />,
+  em: (props) => <em className="italic font-light" {...props} />,
+  table: (props) => (
+    <div className="my-6 w-full overflow-x-auto">
+      <table
+        className="w-full text-gray-200 bg-gray-800 shadow-lg rounded-lg"
+        {...props}
+      />
+    </div>
+  ),
+  tr: (props) => <tr className="border-t border-gray-500" {...props} />,
+  th: (props) => (
+    <th
+      className="px-4 py-2 font-bold text-left bg-gray-900 text-white [&[align=center]]:text-center [&[align=right]]:text-right"
+      {...props}
+    />
+  ),
+  td: (props) => (
+    <td
+      className="px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right"
+      {...props}
+    />
+  ),
+};
+
+export default MDXComponents;
+
+```
+
+# 总结
+
+以上就是一个简单的基于 `NextJs,MDX,GitHub Pages` 的基本使用方式和基础的技术点，其他的能力根据自己的需要补充即可。
