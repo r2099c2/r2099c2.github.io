@@ -45,7 +45,17 @@ _如果链接过期，可以直接搜索 `github pages actions`。_
 
 去掉后就可以正常执行了，每次 `push` 到 `main` 分支就会自动出发 `Action`，为了不浪费资源，建议在其他分支搞完合并过去。
 
-可以直接使用 nextJs 官方的示例，[https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml](https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml)
+也可以直接使用 nextJs 官方的示例，[https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml](https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml)
+
+注意需要将其中的`Upload artifact`改一下路径，因为默认是`.out`，而`nextJs`默认是`.next`。
+
+```yml
+- name: Upload artifact
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: ./out
+    path: ./.next
+```
 
 ## 3. 创建一个 next.js 项目，增强相关写 markdown 的能力
 
