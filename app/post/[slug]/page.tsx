@@ -2,8 +2,28 @@ import MDXComponents from '@/components/MDXComponent';
 import { getPosts } from '@/utils/tools';
 import clsx from 'clsx';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { Metadata } from 'next';
 
-const PostDetail = async ({ params }: { params: { slug: string } }) => {
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = params;
+
+  const { posts } = await getPosts();
+
+  const post = posts.find((post) => post.data.slug === slug);
+
+  return {
+    title: post?.data.title,
+    description: post?.data.description,
+  };
+}
+
+const PostDetail = async ({ params }: Props) => {
   const { slug } = params;
 
   const { posts } = await getPosts();
