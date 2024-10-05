@@ -14,7 +14,7 @@ const withMdx = nextMdx({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withMdx({
-  target: 'serverless',
+  output: 'export',
   // Support MDX files as pages:
   pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
 });

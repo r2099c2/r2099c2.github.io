@@ -47,11 +47,15 @@ _如果链接过期，可以直接搜索 `github pages actions`。_
 
 也可以直接使用 nextJs 官方的示例，[https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml](https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml)
 
-由于是静态部署，需要将 nextjs 的静态部署能力打开，在 `next.config.js` 中配置：
+### 2.2 配置 nextjs 支持静态导出
+
+由于 `GitHub Pages` 目的是静态文件托管，而 nextjs 默认是服务器渲染，所以需要将 nextjs 改为静态部署，在 `next.config.js` 中配置：
 
 ```mjs
 output: 'export';
 ```
+
+此时，运行 `next build` 会在根目录生成一个 `out` 文件夹，里面包含所有的相关文件。
 
 ## 3. 创建一个 next.js 项目，增强相关写 markdown 的能力
 
