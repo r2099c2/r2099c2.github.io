@@ -47,14 +47,10 @@ _如果链接过期，可以直接搜索 `github pages actions`。_
 
 也可以直接使用 nextJs 官方的示例，[https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml](https://github.com/gregrickaby/nextjs-github-pages/blob/main/.github/workflows/deploy.yml)
 
-注意需要将其中的`Upload artifact`改一下路径，因为默认是`.out`，而`nextJs`默认是`.next`。
+由于是静态部署，需要将 nextjs 的静态部署能力打开，在 `next.config.js` 中配置：
 
-```yml
-- name: Upload artifact
-  uses: actions/upload-pages-artifact@v3
-  with:
-    path: ./out
-    path: ./.next
+```mjs
+output: 'export';
 ```
 
 ## 3. 创建一个 next.js 项目，增强相关写 markdown 的能力
