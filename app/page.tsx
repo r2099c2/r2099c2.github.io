@@ -4,7 +4,7 @@ export default async function Home() {
   const { posts } = await getPosts();
 
   return (
-    <div className="w-screen h-screen bg-sky-900">
+    <div className="w-screen h-screen">
       <main className="mx-auto pt-10 px-5">
         {/* 列表 */}
         <ul>

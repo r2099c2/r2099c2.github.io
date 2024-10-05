@@ -77,7 +77,7 @@ const MDXComponents: MDXComponentsProps = {
     } else {
       return (
         <span
-          className="bg-gray-600 rounded px-[0.3rem] py-[0.2rem] font-mono"
+          className="bg-gray-300 dark:bg-gray-600 rounded px-[0.3rem] py-[0.1rem] font-mono"
           {...props}
         />
       );
@@ -103,7 +103,7 @@ const MDXComponents: MDXComponentsProps = {
   table: (props) => (
     <div className="my-6 w-full overflow-x-auto">
       <table
-        className="w-full text-gray-200 bg-gray-800 shadow-lg rounded-lg"
+        className="w-full text-gray-200 bg-gray-300 dark:bg-gray-800 shadow-lg rounded-lg"
         {...props}
       />
     </div>
@@ -111,7 +111,7 @@ const MDXComponents: MDXComponentsProps = {
   tr: (props) => <tr className="border-t border-gray-500" {...props} />,
   th: (props) => (
     <th
-      className="px-4 py-2 font-bold text-left bg-gray-900 text-white [&[align=center]]:text-center [&[align=right]]:text-right"
+      className="px-4 py-2 font-bold text-left bg-gray-400 dark:bg-gray-900 text-white [&[align=center]]:text-center [&[align=right]]:text-right"
       {...props}
     />
   ),
