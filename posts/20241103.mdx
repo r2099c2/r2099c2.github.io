@@ -16,3 +16,23 @@ lastUpdated: 2024-11-03
 - App 使用 tauri2 研发
 - 服务器使用 actix-web
 - 数据库使用 postgresql
+
+## 本地研发 web 服务链接数据库
+
+### 1. docker 安装 postgresql
+
+首先本地装一个 docker，去官网安装即可。
+
+然后拉取 postgresql 镜像：
+
+```shell
+docker image pull postgres
+```
+
+启动一个 postgresql 容器：
+
+```shell
+docker run --name postgres -e POSTGRES_PASSWORD=123456 -d -p 5432:5432 postgres
+```
+
+### 2. 安装 diesel_cli
