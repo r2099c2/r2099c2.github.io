@@ -35,4 +35,29 @@ docker image pull postgres
 docker run --name postgres -e POSTGRES_PASSWORD=123456 -d -p 5432:5432 postgres
 ```
 
-### 2. 安装 diesel_cli
+### 2. actix-web 文件结构
+
+官网中并没有推荐的目录结构，为了可以更好的扩展，我选择了如下的目录结构：
+
+```shell
+.
+├── Cargo.toml
+├── src
+│   ├── main.rs  # 主入口
+│   ├── db.rs  # 数据库连接
+│   ├── app
+│   │   ├── mod.rs # app 模块
+│   │   ├── utils.rs # 工具函数
+│   │   ├── a_project # A 项目模块
+│   │   │   ├── mod.rs # 模块入口
+│   │   │   ├── models.rs # 数据模型
+│   │   │   ├── api.rs # api 路由
+│   │   │   ├── tests.rs # 单元测试
+│   │   │   └── schema.rs # 数据库 schema
+│   ├── models.rs
+│   ├── schema.rs
+│   ├── routes.rs
+│   └── utils.rs
+```
+
+###
