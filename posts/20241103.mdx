@@ -60,4 +60,37 @@ docker run --name postgres -e POSTGRES_PASSWORD=123456 -d -p 5432:5432 postgres
 │   └── utils.rs
 ```
 
-###
+## 本地研发 docker postgresql 连接
+
+```shell
+docker run --name pgsql-dev -e POSTGRES_PASSWORD=pwd -p 5432:5432 postgres
+```
+
+docker run: 启动一个新的 Docker 容器。
+--name pgsql-dev: 为容器指定一个名称 pgsql-dev。
+-e POSTGRES_PASSWORD=687768: 设置环境变量 POSTGRES_PASSWORD，用于指定 PostgreSQL 数据库的密码，这里设置为 pwd。
+-p 5432:5432: 将主机的 5432 端口映射到容器的 5432 端口，这样可以通过主机的 5432 端口访问容器内的 PostgreSQL 数据库。
+postgres: 指定要运行的镜像名称，这里是官方的 PostgreSQL 镜像。
+
+### 进入容器
+
+```shell
+docker exec -it pgsql-dev bash
+```
+
+### 连接数据库
+
+```shell
+POSTGRES_PASSWORD=pwd psql -U postgres
+```
+
+### 创建数据库
+
+注意最后的分号，不要忘记了。
+
+```shell
+create DATABASE clock;
+```
+
+输出 CREATE DATABASE 证明成功了。
+然后就可以通过 \l 查看所有数据库，可以看到 clock 数据库。
