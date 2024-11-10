@@ -53,6 +53,7 @@ docker run --name postgres -e POSTGRES_PASSWORD=123456 -d -p 5432:5432 postgres
 │   │   │   ├── models.rs # 数据模型
 │   │   │   ├── api.rs # api 路由
 │   │   │   ├── tests.rs # 单元测试
+│   │   │   ├── migrate.sql # 数据库
 │   │   │   └── schema.rs # 数据库 schema
 │   ├── models.rs
 │   ├── schema.rs
@@ -94,3 +95,54 @@ create DATABASE clock;
 
 输出 CREATE DATABASE 证明成功了。
 然后就可以通过 \l 查看所有数据库，可以看到 clock 数据库。
+
+### 创建表
+
+```shell
+# 创建表
+CREATE TABLE clock (
+  id VARCHAR PRIMARY KEY,
+  name VARCHAR NOT NULL,
+  description TEXT,
+  total_progress DOUBLE PRECISION NOT NULL,
+  current_progress DOUBLE PRECISION NOT NULL,
+  round INTEGER NOT NULL,
+  warn_threshold DOUBLE PRECISION NOT NULL,
+  critical_threshold DOUBLE PRECISION NOT NULL,
+  enable BOOLEAN NOT NULL,
+  warn_push BOOLEAN NOT NULL
+);
+
+# 查看表
+\d
+            List of relations
+ Schema |    Name     | Type  |  Owner
+--------+-------------+-------+----------
+ public | clock       | table | postgres
+
+
+# 向表中插入数据
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY,JOIN_DATE) VALUES (1, 'Paul', 32, 'California', 20000.00,'2001-07-13');
+INSERT 0 1
+
+
+# 查询表数据
+nextcloud=> SELECT * FROM company;
+ id | name | age |                      address                       | salary | join_date
+----+------+-----+----------------------------------------------------+--------+------------
+  1 | Paul |  32 | California                                         |  20000 | 2001-07-13
+(1 行记录)
+
+
+# 删除表
+nextcloud=> DROP TABLE company;
+DROP TABLE
+nextcloud=> SELECT * FROM company;
+ERROR:  relation "company" does not exist
+第1行SELECT * FROM company;
+                   ^
+nextcloud=>
+
+# 退出
+nextcloud-> \quit
+```
