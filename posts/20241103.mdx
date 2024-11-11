@@ -101,7 +101,7 @@ create DATABASE clock;
 ```shell
 # 创建表
 CREATE TABLE clock (
-  id VARCHAR PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
   description TEXT,
   total_progress DOUBLE PRECISION NOT NULL,
