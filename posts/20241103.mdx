@@ -110,7 +110,9 @@ CREATE TABLE clock (
   warn_threshold DOUBLE PRECISION NOT NULL,
   critical_threshold DOUBLE PRECISION NOT NULL,
   enable BOOLEAN NOT NULL,
-  warn_push BOOLEAN NOT NULL
+  warn_push BOOLEAN NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT(now()),
+  updated_at TIMESTAMP NOT NULL DEFAULT(now())
 );
 
 # 查看表
